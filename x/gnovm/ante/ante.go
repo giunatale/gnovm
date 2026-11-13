@@ -15,7 +15,7 @@ func NewAnteHandler() sdk.AnteDecorator {
 
 type gnoAnteHandler struct{}
 
-func (gnoAnteHandler) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (newCtx sdk.Context, err error) {
+func (gnoAnteHandler) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (sdk.Context, error) {
 	msgs := tx.GetMsgs()
 
 	gnoVMCount := 0
@@ -38,8 +38,8 @@ func (gnoAnteHandler) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next
 	}
 
 	if gnoVMCount > 0 && simulate {
-		newCtx = ctx.WithGasMeter(storetypes.NewInfiniteGasMeter())
+		ctx = ctx.WithGasMeter(storetypes.NewInfiniteGasMeter())
 	}
 
-	return next(newCtx, tx, simulate)
+	return next(ctx, tx, simulate)
 }
