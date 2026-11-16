@@ -3,7 +3,6 @@ package ante
 import (
 	"fmt"
 
-	storetypes "cosmossdk.io/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/gnovm/x/gnovm/types"
@@ -35,10 +34,6 @@ func (gnoAnteHandler) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next
 	// Reject transactions that mix GnoVM and non-GnoVM messages
 	if gnoVMCount > 0 && nonGnoVMCount > 0 {
 		return ctx, fmt.Errorf("cannot mix GnoVM messages with non-GnoVM messages in the same transaction")
-	}
-
-	if gnoVMCount > 0 && simulate {
-		ctx = ctx.WithGasMeter(storetypes.NewInfiniteGasMeter())
 	}
 
 	return next(ctx, tx, simulate)
